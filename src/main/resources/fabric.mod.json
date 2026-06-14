@@ -16,7 +16,7 @@
 	"environment": "*",
 	"entrypoints": {
 		"main": [
-			"com.aclient.AClient"
+			"com.aclient.AClientClient"
 		]
 	},
 	"mixins": [
