@@ -15,8 +15,8 @@
 	"icon": "assets/aclient/icon.png",
 	"environment": "*",
 	"entrypoints": {
-		"main": [
-			"com.aclient.AClientClient"
+		"client": [
+			"com.aclient.client.AClientClient"
 		]
 	},
 	"mixins": [
