@@ -1,19 +1,24 @@
 # AClient
 
-> **Fully Made It AI**
+> **AI-assisted development project**
 
-A [Sources Code](https://github.com/Arvie1290/AClient) Mods, lightweight, client built exclusively for **Fabric 1.21.11**. Developed just for fun :3, AClient introduces an advanced, completely detached Freecam engine with absolute input isolation and smart physics retention.
-Here the [Releases](https://github.com/Arvie1290/AClient/releases/) Version!
+A [Sources Code](https://github.com/Arvie1290/AClient) Mods, lightweight, client built exclusively for **Fabric 1.21.11**. Developed just for fun :3, AClient introduces an advanced, completely detached Freecam engine with good input and smart physics retention.
+[Releases](https://github.com/Arvie1290/AClient/releases/) Download here!.
+
+## Requirements
+
+- Minecraft 1.21.11
+- Fabric Loader
+- Fabric API
 
 ---
 
 ## Features
 
-### Advanced Freecam Engine
-* **True Independent View:** A complete detached cinematic camera system. Fly around and scout your world freely while your physical body stays frozen in place.
-* **Absolute Input Isolation:** Deep engine-level hardware isolation. Pressing movement keys or moving your mouse will only manipulate the Freecam view—zero input leaks to your physical player.
-* **Inverted Strafe Mechanics:** Custom-tailored steering controls where pressing A moves the camera right and D moves left for advanced navigational scouting.
-* **Smart Gravity Retention:** United from ordinary freecam mods, your character body still interacts with world physics. If the blocks beneath your feet are destroyed, your player will naturally fall down matching vanilla gravity!
+### Freecam
+* **Detached Camera:** A complete detached cinematic camera system. Fly around and scout your world freely while your physical body stays frozen in place.
+* **Absolute Input Isolation:** Pressing movement keys or moving your mouse will only manipulate the Freecam view—zero input leaks to your physical player.
+* **Player body continues to obey gravity while Freecam is active:** United from ordinary freecam mods, your character body still interacts with world physics. If the blocks beneath your feet are destroyed, your player will naturally fall down matching vanilla gravity!
 
 ### Controls and Customization
 * **Dynamic Sprint Modifier (Ctrl + Movement):** Boost your flight speed instantly on the fly by holding down Left or Right Control keys while flying.
@@ -26,7 +31,7 @@ Here the [Releases](https://github.com/Arvie1290/AClient/releases/) Version!
 ### System and Safety Cutoffs
 * **Dimension Change Safety:** Automatically deactivates Freecam gracefully when crossing dimensions (Portals, Ender Pearls) to prevent world-loading crashes and coordinate synchronization errors.
 * **Damage Cutoff:** Instantly snaps your camera back to first-person view the exact split-second your physical body takes any form of damage.
-* **Persistent Database:** Integrated JSON auto-save engine (aclient_config.json). All custom keybinds, slider adjustments, and toggles are automatically saved to disk and preserved across game restarts.
+* **Configuration Saving:** Integrated JSON auto-save engine (aclient_config.json). All custom keybinds, slider adjustments, and toggles are automatically saved to disk and preserved across game restarts.
 
 ---
 
