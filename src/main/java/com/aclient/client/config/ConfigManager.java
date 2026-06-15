@@ -1,11 +1,9 @@
 package com.aclient.client.config;
 
 import com.aclient.client.AClientClient;
-import com.aclient.client.module.FreecamModule;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import net.fabricmc.loader.api.FabricLoader;
-
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -16,24 +14,25 @@ public class ConfigManager {
 
     public static class ConfigData {
         public float speed = 1.00f;
-        public float sensitivity = 0.00f;
+        public float sprintSpeed = 2.25f;
+        public float sensitivity = 1.00f;
         public boolean turnOffOnDimensionChange = true;
         public boolean turnOffOnDamage = true;
         public boolean chatNotification = true;
         public int keybind = 0;
-        public int menuKeycode = 342; // GLFW_KEY_INSERT
+        public int menuKeycode = 342;
     }
 
     public static void save() {
         try {
             ConfigData data = new ConfigData();
-            FreecamModule module = AClientClient.FREECAM;
-            data.speed = module.getSpeed();
-            data.sensitivity = module.getSensitivity();
-            data.turnOffOnDimensionChange = module.isTurnOffOnDimensionChange();
-            data.turnOffOnDamage = module.isTurnOffOnDamage();
-            data.chatNotification = module.isChatNotification();
-            data.keybind = module.getKeybind();
+            data.speed = AClientClient.FREECAM.getSpeed();
+            data.sprintSpeed = AClientClient.FREECAM.getSprintSpeed();
+            data.sensitivity = AClientClient.FREECAM.getSensitivity();
+            data.turnOffOnDimensionChange = AClientClient.FREECAM.isTurnOffOnDimensionChange();
+            data.turnOffOnDamage = AClientClient.FREECAM.isTurnOffOnDamage();
+            data.chatNotification = AClientClient.FREECAM.isChatNotification();
+            data.keybind = AClientClient.FREECAM.getKeybind();
             data.menuKeycode = AClientClient.menuKeycode;
 
             try (FileWriter writer = new FileWriter(FILE)) {
@@ -52,13 +51,13 @@ public class ConfigManager {
         try (FileReader reader = new FileReader(FILE)) {
             ConfigData data = GSON.fromJson(reader, ConfigData.class);
             if (data != null) {
-                FreecamModule module = AClientClient.FREECAM;
-                module.setSpeed(data.speed);
-                module.setSensitivity(data.sensitivity);
-                module.setTurnOffOnDimensionChange(data.turnOffOnDimensionChange);
-                module.setTurnOffOnDamage(data.turnOffOnDamage);
-                module.setChatNotification(data.chatNotification);
-                module.setKeybind(data.keybind);
+                AClientClient.FREECAM.setSpeed(data.speed);
+                AClientClient.FREECAM.setSprintSpeed(data.sprintSpeed);
+                AClientClient.FREECAM.setSensitivity(data.sensitivity);
+                AClientClient.FREECAM.setTurnOffOnDimensionChange(data.turnOffOnDimensionChange);
+                AClientClient.FREECAM.setTurnOffOnDamage(data.turnOffOnDamage);
+                AClientClient.FREECAM.setChatNotification(data.chatNotification);
+                AClientClient.FREECAM.setKeybind(data.keybind);
                 AClientClient.menuKeycode = data.menuKeycode;
             }
         } catch (Exception e) {

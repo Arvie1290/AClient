@@ -1,34 +1,42 @@
-package com.aclient.mixin;
+package com.aclient.client.mixin;
 
 import com.aclient.client.AClientClient;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.Camera;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World; // FIX: Import World instead of BlockView
+import net.minecraft.world.World;
 import net.minecraft.entity.Entity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Camera.class)
-public class CameraMixin {
+public abstract class CameraMixin {
     @Shadow private Vec3d pos;
-    @Shadow private float pitch;
-    @Shadow private float yaw;
+    @Shadow protected abstract void setRotation(float yaw, float pitch);
+
+    @Inject(method = "update", at = @At("HEAD"))
+    private void onUpdateHead(World world, Entity focusedEntity, boolean thirdPerson, boolean inverseView, float tickDelta, CallbackInfo ci) {
+        if (AClientClient.FREECAM.isActive()) {
+            AClientClient.FREECAM.onRenderTick(MinecraftClient.getInstance());
+        }
+    }
 
     @Inject(method = "update", at = @At("RETURN"))
-    // FIX: Swapped out BlockView parameter for World to align cleanly with 1.21.11 method descriptor expectations
-    private void onUpdate(World world, Entity focusedEntity, boolean thirdPerson, boolean inverseView, float tickDelta, CallbackInfo ci) {
+    private void onUpdateReturn(World world, Entity focusedEntity, boolean thirdPerson, boolean inverseView, float tickDelta, CallbackInfo ci) {
         if (AClientClient.FREECAM.isActive()) {
-            // Decouple camera coordinates to use the isolated fly vector
             this.pos = AClientClient.FREECAM.getCameraPos();
+            this.setRotation(AClientClient.FREECAM.getFreecamYaw(), AClientClient.FREECAM.getFreecamPitch());
+        }
+    }
 
-            // Camera orientation behavior matches configuration setup
-            if (AClientClient.FREECAM.getSensitivity() > 0.00f) {
-                this.pitch = AClientClient.FREECAM.getFreecamPitch();
-                this.yaw = AClientClient.FREECAM.getFreecamYaw();
-            }
+    @Inject(method = "isThirdPerson", at = @At("HEAD"), cancellable = true)
+    private void onIsThirdPerson(CallbackInfoReturnable<Boolean> cir) {
+        if (AClientClient.FREECAM.isActive()) {
+            cir.setReturnValue(true);
         }
     }
 }

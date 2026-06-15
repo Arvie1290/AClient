@@ -13,68 +13,70 @@ import net.minecraft.world.World;
 import org.lwjgl.glfw.GLFW;
 
 public class AClientClient implements ClientModInitializer {
-	public static final FreecamModule FREECAM = new FreecamModule();
-	public static int menuKeycode = GLFW.GLFW_KEY_INSERT; // Default Menu Activation Key
+    public static final FreecamModule FREECAM = new FreecamModule();
+    public static int menuKeycode = GLFW.GLFW_KEY_INSERT;
 
-	private static KeyBinding guiKeyBinding;
-	private static RegistryKey<World> lastDimension = null;
+    private static KeyBinding guiKeyBinding;
+    private static RegistryKey<World> lastDimension = null;
 
-	@Override
-	public void onInitializeClient() {
-		// Load persistent JSON configurations on startup
-		ConfigManager.load();
+    @Override
+    public void onInitializeClient() {
+        ConfigManager.load();
 
-		guiKeyBinding = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-				"key.aclient.open_menu",
-				InputUtil.Type.KEYSYM,
-				menuKeycode,
-				KeyBinding.Category.MISC
-		));
+        guiKeyBinding = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+                "key.aclient.open_menu",
+                InputUtil.Type.KEYSYM,
+                menuKeycode,
+                KeyBinding.Category.MISC
+        ));
 
-		ClientTickEvents.END_CLIENT_TICK.register(client -> {
-			if (client.player == null || client.world == null) {
-				lastDimension = null;
-				return;
-			}
+        ClientTickEvents.END_CLIENT_TICK.register(client -> {
+            if (client.player == null || client.world == null) {
+                lastDimension = null;
+                if (FREECAM.isActive()) {
+                    FREECAM.disableOnDimensionChange(client);
+                }
+                return;
+            }
 
-			if (client.currentScreen != null && !(client.currentScreen instanceof ClickGuiScreen)) {
-				return;
-			}
+            if (client.currentScreen != null && !(client.currentScreen instanceof ClickGuiScreen)) {
+                return;
+            }
 
-			RegistryKey<World> currentDimension = client.world.getRegistryKey();
-			if (lastDimension != null && !lastDimension.equals(currentDimension)) {
-				if (FREECAM.isActive() && FREECAM.isTurnOffOnDimensionChange()) {
-					FREECAM.setActive(false);
-				}
-			}
-			lastDimension = currentDimension;
+            RegistryKey<World> currentDimension = client.world.getRegistryKey();
+            if (lastDimension != null && !lastDimension.equals(currentDimension)) {
+                if (FREECAM.isActive() && FREECAM.isTurnOffOnDimensionChange()) {
+                    FREECAM.disableOnDimensionChange(client);
+                }
+            }
+            lastDimension = currentDimension;
 
-			if (client.player.hurtTime > 0) {
-				if (FREECAM.isActive() && FREECAM.isTurnOffOnDamage()) {
-					FREECAM.setActive(false);
-				}
-			}
+            if (client.player.hurtTime > 0) {
+                if (FREECAM.isActive() && FREECAM.isTurnOffOnDamage()) {
+                    FREECAM.toggle(client);
+                }
+            }
 
-			if (InputUtil.isKeyPressed(client.getWindow(), menuKeycode)) {
-				if (client.currentScreen == null) {
-					client.setScreen(new ClickGuiScreen());
-				}
-			}
+            if (InputUtil.isKeyPressed(client.getWindow(), menuKeycode)) {
+                if (client.currentScreen == null) {
+                    client.setScreen(new ClickGuiScreen());
+                }
+            }
 
-			if (client.currentScreen == null && FREECAM.getKeybind() != GLFW.GLFW_KEY_UNKNOWN) {
-				if (InputUtil.isKeyPressed(client.getWindow(), FREECAM.getKeybind())) {
-					if (!FREECAM.isKeybindPressedLastTick()) {
-						FREECAM.toggle(client);
-						FREECAM.setKeybindPressedLastTick(true);
-					}
-				} else {
-					FREECAM.setKeybindPressedLastTick(false);
-				}
-			}
+            if (client.currentScreen == null && FREECAM.getKeybind() != 0) {
+                if (InputUtil.isKeyPressed(client.getWindow(), FREECAM.getKeybind())) {
+                    if (!FREECAM.isKeybindPressedLastTick()) {
+                        FREECAM.toggle(client);
+                        FREECAM.setKeybindPressedLastTick(true);
+                    }
+                } else {
+                    FREECAM.setKeybindPressedLastTick(false);
+                }
+            }
 
-			if (FREECAM.isActive()) {
-				FREECAM.onTick(client);
-			}
-		});
-	}
+            if (FREECAM.isActive()) {
+                FREECAM.onClientTick(client);
+            }
+        });
+    }
 }

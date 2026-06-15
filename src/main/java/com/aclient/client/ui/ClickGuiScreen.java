@@ -17,6 +17,7 @@ public class ClickGuiScreen extends Screen {
     private boolean listeningForMenuKey = false;
 
     private boolean draggingSpeed = false;
+    private boolean draggingSprintSpeed = false;
     private boolean draggingSensitivity = false;
 
     public ClickGuiScreen() {
@@ -65,49 +66,58 @@ public class ClickGuiScreen extends Screen {
             int cfgX = mainX - 170;
             int cfgY = mainY - 20;
             int cfgW = 160;
-            int cfgH = 196; // Extended configuration layout height
+            int cfgH = 224;
 
             context.fill(cfgX, cfgY, cfgX + cfgW, cfgY + cfgH, 0xDD050505);
             context.drawTextWithShadow(this.textRenderer, "Freecam Configuration", cfgX + 5, cfgY + 6, 0xFFFF5555);
 
-            context.getMatrices().pushMatrix();
-            context.getMatrices().translate((float)(cfgX + 5), (float)(cfgY + 18));
-            context.getMatrices().scale(0.75f, 0.75f);
-            context.drawTextWithShadow(this.textRenderer, "Can make your camera float anywhere!", 0, 0, 0xFFAAAAAA);
-            context.getMatrices().popMatrix();
-
             int sliderX = cfgX + 8;
             int sliderW = 144;
 
-            int speedY = cfgY + 44;
+            int speedY = cfgY + 42;
             if (this.draggingSpeed) {
                 float pct = (float) (mouseX - sliderX) / sliderW;
                 pct = Math.max(0.0f, Math.min(1.0f, pct));
-                float newSpeed = 0.01f + pct * (50.00f - 0.01f);
+                float newSpeed = 0.01f + pct * (100.00f - 0.01f);
                 module.setSpeed(newSpeed);
             }
-
-            context.drawTextWithShadow(this.textRenderer, "Freecam Speed:", cfgX + 5, cfgY + 32, 0xFFFFFFFF);
-            context.fill(cfgX + 116, cfgY + 30, cfgX + 152, cfgY + 41, 0xFF151515);
-            context.drawTextWithShadow(this.textRenderer, String.format("%.2f", module.getSpeed()), cfgX + 120, cfgY + 32, 0xFF55FF55);
+            context.drawTextWithShadow(this.textRenderer, "Speed of Freecam:", cfgX + 5, cfgY + 30, 0xFFFFFFFF);
+            context.fill(cfgX + 116, cfgY + 28, cfgX + 154, cfgY + 39, 0xFF151515);
+            context.drawTextWithShadow(this.textRenderer, String.format("%.1f", module.getSpeed()), cfgX + 119, cfgY + 30, 0xFF55FF55);
 
             context.fill(sliderX, speedY + 3, sliderX + sliderW, speedY + 5, 0xFF333333);
-            float speedPct = (module.getSpeed() - 0.01f) / (50.00f - 0.01f);
+            float speedPct = (module.getSpeed() - 0.01f) / (100.00f - 0.01f);
             int speedKnobX = sliderX + (int) (speedPct * sliderW);
             context.fill(sliderX, speedY + 3, speedKnobX, speedY + 5, 0xFF55FF55);
             context.fill(speedKnobX - 2, speedY, speedKnobX + 2, speedY + 8, 0xFFFFFFFF);
 
-            int sensY = cfgY + 70;
+            int sprintY = cfgY + 68;
+            if (this.draggingSprintSpeed) {
+                float pct = (float) (mouseX - sliderX) / sliderW;
+                pct = Math.max(0.0f, Math.min(1.0f, pct));
+                float newSprint = 0.01f + pct * (50.00f - 0.01f);
+                module.setSprintSpeed(newSprint);
+            }
+            context.drawTextWithShadow(this.textRenderer, "Sprint Freecam (Ctrl+Move):", cfgX + 5, cfgY + 56, 0xFFFFFFFF);
+            context.fill(cfgX + 124, cfgY + 54, cfgX + 154, cfgY + 65, 0xFF151515);
+            context.drawTextWithShadow(this.textRenderer, String.format("%.2f", module.getSprintSpeed()), cfgX + 126, cfgY + 56, 0xFF55FF55);
+
+            context.fill(sliderX, sprintY + 3, sliderX + sliderW, sprintY + 5, 0xFF333333);
+            float sprintPct = (module.getSprintSpeed() - 0.01f) / (50.00f - 0.01f);
+            int sprintKnobX = sliderX + (int) (sprintPct * sliderW);
+            context.fill(sliderX, sprintY + 3, sprintKnobX, sprintY + 5, 0xFF55FF55);
+            context.fill(sprintKnobX - 2, sprintY, sprintKnobX + 2, sprintY + 8, 0xFFFFFFFF);
+
+            int sensY = cfgY + 94;
             if (this.draggingSensitivity) {
                 float pct = (float) (mouseX - sliderX) / sliderW;
                 pct = Math.max(0.0f, Math.min(1.0f, pct));
                 float newSens = 0.00f + pct * (10.00f - 0.00f);
                 module.setSensitivity(newSens);
             }
-
-            context.drawTextWithShadow(this.textRenderer, "Freecam Sensitivity:", cfgX + 5, cfgY + 58, 0xFFFFFFFF);
-            context.fill(cfgX + 116, cfgY + 56, cfgX + 152, cfgY + 67, 0xFF151515);
-            context.drawTextWithShadow(this.textRenderer, String.format("%.2f", module.getSensitivity()), cfgX + 122, cfgY + 58, 0xFF55FF55);
+            context.drawTextWithShadow(this.textRenderer, "Freecam Sensitivity:", cfgX + 5, cfgY + 82, 0xFFFFFFFF);
+            context.fill(cfgX + 124, cfgY + 80, cfgX + 154, cfgY + 91, 0xFF151515);
+            context.drawTextWithShadow(this.textRenderer, String.format("%.2f", module.getSensitivity()), cfgX + 126, cfgY + 82, 0xFF55FF55);
 
             context.fill(sliderX, sensY + 3, sliderX + sliderW, sensY + 5, 0xFF333333);
             float sensPct = (module.getSensitivity() - 0.00f) / (10.00f - 0.00f);
@@ -115,32 +125,23 @@ public class ClickGuiScreen extends Screen {
             context.fill(sliderX, sensY + 3, sensKnobX, sensY + 5, 0xFF55FF55);
             context.fill(sensKnobX - 2, sensY, sensKnobX + 2, sensY + 8, 0xFFFFFFFF);
 
-            context.getMatrices().pushMatrix();
-            context.getMatrices().translate((float)(cfgX + 5), (float)(cfgY + 81));
-            context.getMatrices().scale(0.62f, 0.62f);
-            context.drawTextWithShadow(this.textRenderer, "If Sensitivity hits 0.00, game sensitivity applies!", 0, 0, 0xFF999999);
-            context.getMatrices().popMatrix();
+            context.drawTextWithShadow(this.textRenderer, "Dimension Cutoff: " + (module.isTurnOffOnDimensionChange() ? "§aOn" : "§cOff"), cfgX + 5, cfgY + 110, 0xFFFFFFFF);
+            context.drawTextWithShadow(this.textRenderer, "Damage Cutoff: " + (module.isTurnOffOnDamage() ? "§aOn" : "§cOff"), cfgX + 5, cfgY + 123, 0xFFFFFFFF);
 
-            context.drawTextWithShadow(this.textRenderer, "Dimension Cutoff: " + (module.isTurnOffOnDimensionChange() ? "§aOn" : "§cOff"), cfgX + 5, cfgY + 94, 0xFFFFFFFF);
-            context.drawTextWithShadow(this.textRenderer, "Damage Cutoff: " + (module.isTurnOffOnDamage() ? "§aOn" : "§cOff"), cfgX + 5, cfgY + 107, 0xFFFFFFFF);
-
-            // --- GLOBAL SETTINGS SECTION ---
             context.getMatrices().pushMatrix();
-            context.getMatrices().translate((float)(cfgX + 5), (float)(cfgY + 119));
+            context.getMatrices().translate((float)(cfgX + 5), (float)(cfgY + 137));
             context.getMatrices().scale(0.70f, 0.70f);
             context.drawTextWithShadow(this.textRenderer, "Global Settings", 0, 0, 0xFFAAAAAA);
             context.getMatrices().popMatrix();
 
-            // Chat Notification Button Option
-            context.drawTextWithShadow(this.textRenderer, "Chat Notification: " + (module.isChatNotification() ? "§aOn" : "§cOff"), cfgX + 5, cfgY + 129, 0xFFFFFFFF);
+            context.drawTextWithShadow(this.textRenderer, "Chat Notification: " + (module.isChatNotification() ? "§aOn" : "§cOff"), cfgX + 5, cfgY + 147, 0xFFFFFFFF);
+            context.drawTextWithShadow(this.textRenderer, "§6[ Reset All ]", cfgX + 5, cfgY + 162, 0xFFFFFFFF);
 
-            context.drawTextWithShadow(this.textRenderer, "§6[ Reset All ]", cfgX + 5, cfgY + 144, 0xFFFFFFFF);
+            String bindText = listeningForKeybind ? "[Press Key...]" : (module.getKeybind() == 0 ? "Not Bound" : InputUtil.Type.KEYSYM.createFromCode(module.getKeybind()).getLocalizedText().getString());
+            context.drawTextWithShadow(this.textRenderer, "Keybinds: §e" + bindText, cfgX + 5, cfgY + 177, 0xFFFFFFFF);
 
-            String bindText = listeningForKeybind ? "[Press Key...]" : (module.getKeybind() == GLFW.GLFW_KEY_UNKNOWN ? "Not Bound" : InputUtil.Type.KEYSYM.createFromCode(module.getKeybind()).getLocalizedText().getString());
-            context.drawTextWithShadow(this.textRenderer, "Keybinds: §e" + bindText, cfgX + 5, cfgY + 157, 0xFFFFFFFF);
-
-            context.drawTextWithShadow(this.textRenderer, "§c[ Hide Configuration ]", cfgX + 5, cfgY + 170, 0xFFFFFFFF);
-            context.drawTextWithShadow(this.textRenderer, "Active: " + (module.isActive() ? "§a[✔]" : "§c[ ]"), cfgX + 5, cfgY + 183, 0xFFFFFFFF);
+            context.drawTextWithShadow(this.textRenderer, "§c[ Hide Configuration ]", cfgX + 5, cfgY + 192, 0xFFFFFFFF);
+            context.drawTextWithShadow(this.textRenderer, "Active: " + (module.isActive() ? "§a[✔]" : "§c[ ]"), cfgX + 5, cfgY + 207, 0xFFFFFFFF);
         }
     }
 
@@ -175,46 +176,48 @@ public class ClickGuiScreen extends Screen {
             int sliderX = cfgX + 8;
             int sliderW = 144;
 
-            if (mouseX >= sliderX && mouseX <= sliderX + sliderW && mouseY >= cfgY + 40 && mouseY <= cfgY + 52) {
+            if (mouseX >= sliderX && mouseX <= sliderX + sliderW && mouseY >= cfgY + 38 && mouseY <= cfgY + 50) {
                 this.draggingSpeed = true;
                 return true;
             }
-
-            if (mouseX >= sliderX && mouseX <= sliderX + sliderW && mouseY >= cfgY + 66 && mouseY <= cfgY + 78) {
+            if (mouseX >= sliderX && mouseX <= sliderX + sliderW && mouseY >= cfgY + 64 && mouseY <= cfgY + 76) {
+                this.draggingSprintSpeed = true;
+                return true;
+            }
+            if (mouseX >= sliderX && mouseX <= sliderX + sliderW && mouseY >= cfgY + 90 && mouseY <= cfgY + 102) {
                 this.draggingSensitivity = true;
                 return true;
             }
 
-            if (mouseX >= cfgX && mouseX <= cfgX + 150 && mouseY >= cfgY + 92 && mouseY <= cfgY + 103) {
+            if (mouseX >= cfgX && mouseX <= cfgX + 150 && mouseY >= cfgY + 108 && mouseY <= cfgY + 119) {
                 module.setTurnOffOnDimensionChange(!module.isTurnOffOnDimensionChange());
                 ConfigManager.save();
                 return true;
             }
-            if (mouseX >= cfgX && mouseX <= cfgX + 150 && mouseY >= cfgY + 105 && mouseY <= cfgY + 116) {
+            if (mouseX >= cfgX && mouseX <= cfgX + 150 && mouseY >= cfgY + 121 && mouseY <= cfgY + 132) {
                 module.setTurnOffOnDamage(!module.isTurnOffOnDamage());
                 ConfigManager.save();
                 return true;
             }
-            // Click Handler for Chat Notification Toggle
-            if (mouseX >= cfgX && mouseX <= cfgX + 150 && mouseY >= cfgY + 127 && mouseY <= cfgY + 138) {
+            if (mouseX >= cfgX && mouseX <= cfgX + 150 && mouseY >= cfgY + 145 && mouseY <= cfgY + 156) {
                 module.setChatNotification(!module.isChatNotification());
                 ConfigManager.save();
                 return true;
             }
-            if (mouseX >= cfgX && mouseX <= cfgX + 80 && mouseY >= cfgY + 142 && mouseY <= cfgY + 153) {
+            if (mouseX >= cfgX && mouseX <= cfgX + 80 && mouseY >= cfgY + 160 && mouseY <= cfgY + 171) {
                 module.resetAll();
                 ConfigManager.save();
                 return true;
             }
-            if (mouseX >= cfgX && mouseX <= cfgX + 150 && mouseY >= cfgY + 155 && mouseY <= cfgY + 166) {
+            if (mouseX >= cfgX && mouseX <= cfgX + 150 && mouseY >= cfgY + 175 && mouseY <= cfgY + 186) {
                 listeningForKeybind = true;
                 return true;
             }
-            if (mouseX >= cfgX && mouseX <= cfgX + 120 && mouseY >= cfgY + 168 && mouseY <= cfgY + 179) {
+            if (mouseX >= cfgX && mouseX <= cfgX + 120 && mouseY >= cfgY + 190 && mouseY <= cfgY + 201) {
                 showConfig = false;
                 return true;
             }
-            if (mouseX >= cfgX && mouseX <= cfgX + 100 && mouseY >= cfgY + 181 && mouseY <= cfgY + 193) {
+            if (mouseX >= cfgX && mouseX <= cfgX + 100 && mouseY >= cfgY + 205 && mouseY <= cfgY + 217) {
                 module.toggle(this.client);
                 return true;
             }
@@ -225,10 +228,11 @@ public class ClickGuiScreen extends Screen {
 
     @Override
     public boolean mouseReleased(Click click) {
-        if (this.draggingSpeed || this.draggingSensitivity) {
+        if (this.draggingSpeed || this.draggingSprintSpeed || this.draggingSensitivity) {
             this.draggingSpeed = false;
+            this.draggingSprintSpeed = false;
             this.draggingSensitivity = false;
-            ConfigManager.save(); // Save configuration when sliders are released
+            ConfigManager.save();
         }
         return super.mouseReleased(click);
     }
@@ -248,7 +252,7 @@ public class ClickGuiScreen extends Screen {
 
         if (listeningForKeybind) {
             if (keyCode == GLFW.GLFW_KEY_ESCAPE) {
-                AClientClient.FREECAM.setKeybind(GLFW.GLFW_KEY_UNKNOWN);
+                AClientClient.FREECAM.setKeybind(0);
             } else {
                 AClientClient.FREECAM.setKeybind(keyCode);
             }
