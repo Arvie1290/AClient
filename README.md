@@ -2,7 +2,8 @@
 
 > **Fully Made It AI**
 
-A lightweight, high-performance utility client built exclusively for **Fabric 1.21.11**. Developed just for fun :3, AClient introduces an advanced, completely detached Freecam engine with absolute input isolation and smart physics retention.
+A [Sources Code](https://github.com/Arvie1290/AClient) Mods, lightweight, client built exclusively for **Fabric 1.21.11**. Developed just for fun :3, AClient introduces an advanced, completely detached Freecam engine with absolute input isolation and smart physics retention.
+Here the [Releases](https://github.com/Arvie1290/AClient/releases/) Version!
 
 ---
 
@@ -71,5 +72,3 @@ The compiled .jar file will be generated inside the build/libs/ directory.
 ---
 
 > **Note From Creator:** This client mod is compiled and optimized strictly for the Fabric 1.21.11 ecosystem. Using this on other versions might break Mixin injectors or cause mapping failures! Have fun debugging! :3
-> 
-```

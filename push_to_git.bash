@@ -96,7 +96,6 @@ echo ""
 
 read -p "Commit message: " msg
 
-git pull
 
 git add .
 
