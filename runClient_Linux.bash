@@ -13,8 +13,8 @@ do
     ./gradlew runClient
 
     echo
-    echo "Game Selesai."
-    read -n 1 -s -r -p "Tekan [R] untuk Restart atau [Q] untuk Keluar... " key
+    echo "Debugging Done."
+    read -n 1 -s -r -p "Press [R] for Restart or [Q] for Quit... " key
     echo
 
     if [[ "$key" =~ [Qq] ]]; then

@@ -38,3 +38,9 @@ hs_err_*.log
 replay_*.log
 *.hprof
 *.jfr
+
+push_to_git.bash
+
+build/
+.gradle/
+run/
