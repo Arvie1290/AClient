@@ -8,6 +8,8 @@ echo "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"
 
 read -p "Commit message: " msg
 
+git pull
+
 git add .
 
 git commit -m "$msg"
