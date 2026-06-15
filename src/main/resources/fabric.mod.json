@@ -1,7 +1,7 @@
 {
 	"schemaVersion": 1,
 	"id": "aclient",
-	"version": "${version}",
+	"version": "0.0.1",
 	"name": "AClient",
 	"description": "Hack Client Bro.",
 	"authors": [
